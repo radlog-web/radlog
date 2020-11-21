@@ -1,0 +1,12 @@
+-- hint: shuffle
+
+database({
+  start(I: double),
+  matrix(From: integer, To: integer, D: double)
+}).
+
+rank(X, mmax<I>) <- matrix(X, _, _), start(I).
+rank(X, msum<(Y,K)>) <- rank(Y, C), matrix(Y, X, D), K = C / D.
+result(X, Y) <- rank(X, Y).
+
+query result(X, Y).

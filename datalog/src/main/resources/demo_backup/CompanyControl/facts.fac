@@ -1,0 +1,5 @@
+owned_shares(a,b,51).
+owned_shares(a,c,61).
+owned_shares(b,d,11).
+owned_shares(c,d,40).
+owned_shares(c,e,60).

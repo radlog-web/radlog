@@ -1,0 +1,10 @@
+-- hint: broadcast
+
+database({
+  edge(F: integer, T: integer)
+}).
+
+out_degree(X, count<Y>) <- edge(X, Y).
+matrix(X, Y, Z) <- edge(X, Y), out_degree(X, D), Z = D.
+
+query matrix(X, Y, Z).

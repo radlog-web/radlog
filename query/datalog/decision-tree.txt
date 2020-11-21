@@ -1,0 +1,24 @@
+-- hint: shuffle
+
+database({
+  init(ID: integer, Sz: integer, Col: integer, Val: integer, Sid: integer),
+  iset(Sid: integer, Ncol: integer, Nval: integer),
+  expand(Sid: integer, Ncol: integer),
+  train(Tid: integer, Col: integer, Val: integer),
+  dec(Tid: integer, Dec: integer)
+}).
+
+pattern(Cid, Sz, Col, Val, mmin<Sid>) <- init(Cid, Sz, Col, Val, Sid).
+pattern(Cidx, Ss, Col, Val, mmin<Sid>) <- gini(Cid, Sz, Ncol, Gini), npat(Cid, Sz, Ncol, Nval, Col, Val), Cidx = ((Cid opc Ncol) opc Nval), Ss = Sz+1, Sid=0.
+gini(Cid, Sz, cmin<Ncol>, mmin<Gini>) <- cntdec(Cid, Sz, Ncol, Nval, Gini).
+cntdec(Cid, Sz, Ncol, Nval, Gini) <- cntdecy(Cid, Sz, Ncol, Nval, Cy), cntdecyn(Cid, Sz, Ncol, Nval, Dec, Cn), Dec = 0, Gini= 1000*(1 - ((Cy*Cy+Cn*Cn)/((Cy+Cn)*(Cy+Cn)))).
+cntdecy(Cid, Sz, Ncol, Nval, Cy) <- cntdecyn(Cid, Sz, Ncol, Nval, Dec, Cy), Dec = 1.
+cntdecyn(Cid, Sz, Ncol, Nval, Dec, mcount<(Tid,1)>) <- train(Tid, Ncol, Nval), dec(Tid, Dec), match(Tid, Cid, Sz, Ncol, Lev), Lev=1.
+match(Tid, Cid, Sz, Ncol, mcount<(Col,1)>) <- train(Tid, Col, Val), npat(Cid, Sz, Ncol, Nval, Col, Val).
+npat(Cid, Sz, Ncol, Nval, Col, Val) <- fdistc(Cid, Sz, Ncol, Nval), Col=Ncol, Val=Nval.
+npat(Cid, Sz, Ncol, Nval, Col, Val) <- fdistc(Cid, Sz, Ncol, Nval), pattern(Cid, Sz, Col, Val, Sid).
+fdistc(Cid, Sz, Ncol, Nval) <- iset(Sid, Ncol, Nval), distc(Cid, Sz, Ncol, ColCnt), Sz=ColCnt.
+distc(Cid, Sz, Ncol, mcount<(Col,1)>) <- expand(Sid, Ncol), pattern(Cid, Sz, Col, Val, Sid), Ncol ~= Col.
+
+
+query pattern(Cidx, Ss, Col, Val, Sid).

@@ -1,0 +1,14 @@
+-- hint: broadcast
+
+database({
+  inter(S: integer, E: integer)
+}).
+
+left(T1, min<T3>) <- inter(T1, T2), inter(T3, T4), T1<=T4.
+lstart(T1) <- left(T1, T2), T1=T2.
+
+coal(T1, mmax<T2>) <- lstart(T1), inter(T1, T2).
+coal(T1, mmax<T4>) <- coal(T1, T2), inter(T3, T4), T1<=T3, T3<=T2.
+result(T1, max<T2>) <- coal(T1, T2).
+
+query result(T, M).

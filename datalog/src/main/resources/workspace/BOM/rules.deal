@@ -1,0 +1,31 @@
+begin module "BOM".
+
+% Count of subparts in part
+export cntbasic(A,B).
+export cntbasic($A,B).
+cassb(Part, Sub, fsmax<Qty>) <- assbl(Part, Sub, Qty).
+cbasic(Pno, fscnt<Pno>) <- basic(Pno, _).
+cbasic(Part, fscnt<(Sub,(Qty, N))>) <- cassb(Part, Sub, Qty), cbasic(Sub, N).
+cntbasic(Prt, max<Qty>) <- cbasic(Prt, Qty).
+
+% Maximum days to part delivery
+export actualDays(A,B).
+export actualDays($A,B).
+delivery(Pno, fsmax<Days>) <- basic(Pno, Days).
+delivery(Part, fsmax<Days>) <- assbl(Part, Sub, _), delivery(Sub, Days).
+actualDays(Part, max<Days>) <- delivery(Part, Days).
+
+% Count of each subpart in part 
+%cassb(Part, Sub, fsmax<Qty>) <- assbl(Part, Sub, Qty).
+need(Pno, Pno, fscnt<(Pno)>) <- basic(Pno, _).
+need(Part, Sub, fscnt<(P1,(K,N))>) <- cassb(Part, P1, K), need(P1, Sub, N).
+total(Part, Sub, max<K>) <- need(Part, Sub, K).
+
+% maximum number of hours to part delivery
+export actualhours(A,B).
+export actualhours($A,B).
+ready(Pno, fsmax<Hours>) <- basic(Pno, Days), Hours = 24 * Days.
+ready(Part, fsmax<Hours>) <- assbl(Part, Sub, _), ready(Sub, H), Hours = H + 2.
+actualhours(Part, max<CH>) <- ready(Part, CH).
+
+end module.

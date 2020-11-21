@@ -1,0 +1,12 @@
+-- hint: shuffle
+
+database({
+  pattern(ID: integer, Lev: integer, Sid: integer, Col: integer, Val: integer),
+  train(Tid: integer, Col: integer, Val: integer),
+  dec(Tid: integer, Dec: integer)
+}).
+matches(Tid, Cid, Sz, mcount<(Col, Val)>)  <- train(Tid, Col, Val), pattern(Cid, Sz, Col, Val).
+matched(Tid, Cid)  <- matches(Tid, Cid, Sz, Cnt), dec(Tid, Dec), Sz == Cnt.
+treedec(Cid, cmax<Dec>, max<TCnt>) <- matched(Cid, Dec, TCnt).
+
+query treedec(Tid, Cid).

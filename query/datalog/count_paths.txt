@@ -1,0 +1,11 @@
+-- hint: shuffle
+
+database({
+  rc(A: integer, B: integer)
+}).
+
+paths(B, mcount<(B,1)>) <- B={startvertex}.
+paths(B, mcount<(A,C)>) <- paths(A,C), rc(A,B).
+result(B, max(C)) <- paths(B,C).
+
+query result(B, C).

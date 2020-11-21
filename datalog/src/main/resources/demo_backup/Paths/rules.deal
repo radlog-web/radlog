@@ -1,0 +1,19 @@
+begin module "Paths".
+% Number of distinct paths between two nodes in DAG
+export countpaths(A, B, C).
+export countpaths($A, B, C).
+export countpaths($A, $B, C).
+
+path(X, Y, fscnt<X>) <- arc(X, Y).
+path(X, Y, fscnt<(Z,N)>) <- path(X, Z, N), arc(Z, Y).
+countpaths(X, Y, max<N>) <- path(X, Y, N).
+
+% Find shortest path cost between two nodes
+export floydsshortestpath(A,B,C).
+export floydsshortestpath($A,B,C).
+export floydsshortestpath($A,$B,C).
+fpath(X,Y,fsmax<C>) <- arcW(X, Y, D), C = 1/D.
+fpath(X,Z,fsmax<C>) <- fpath(X, Y, C1), fpath(Y, Z, C2), C = 1/(1/C1 + 1/C2).
+floydsshortestpath(X, Z, min<D>) <- fpath(X, Z, C), D = 1/C.
+
+end module.

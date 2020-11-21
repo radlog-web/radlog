@@ -1,0 +1,17 @@
+-- hint: shuffle
+
+database({
+  mbsk(Bno: integer, It: integer),
+  init(It: integer, M: integer, Id: integer)
+ }).
+
+fitset(It, Id, M) <- init(It, M, Id).
+fitset(It, Id, M1) <- csetX(IdX, IdY, M, BCnt), uns(It, IdX, IdY, M), Id=IdX opc IdY, BCnt >{MS}, M1=M+1.
+csetX(IdX, IdY, M, mcount<(Bno,1)>) <- csets(IdX, IdY, M, Bno, CntV), M+1=CntV.
+csets(IdX, IdY, M, Bno, mcount<(It,1)>) <- uns(It, IdX, IdY, M), mbsk(Bno, It).
+uns(It, Idx, Idy, M) <- fovlp(It, Idz, Idx, Idy, M), Idz = Idx.
+uns(It, Idx, Idy, M) <- fovlp(It, Idz, Idx, Idy, M), Idz = Idy.
+fovlp(It, Idz, Idx, Idy, M) <- fitset(It, Idz, M), ovlp(Idx, Idy, M, Ocnt), M-1=Ocnt.
+ovlp(Idx, Idy, M, mcount<(It,1)>) <- fitset(It, Idx, M), fitset(It, Idy, M), Idx < Idy.
+
+query fitset(It, Id, M1).

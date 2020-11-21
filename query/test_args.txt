@@ -1,0 +1,208 @@
+-partitions=3
+-codegen=true
+-fixpointTask=false
+-master=local[*]
+-log=info
+-output=query/test_out
+
+// Antlr configuration
+// Add antlr-4.7.1-complete.jar to your CLASSPATH:
+export CLASSPATH=".:/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH"
+// Create aliases for the ANTLR Tool
+alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
+// Testing the installation
+java org.antlr.v4.Tool
+// run antlr4
+antlr4 DeAL.g4
+
+// logistic regression
+-log=info -program=bgd-logistic -partitions=2 -codegen=true -fixpointTask=false -start=testdata/bgd/start.csv -vhouse=testdata/bgd/vhouse.csv -output=testdata/results/bgd-logistic.out -N=2 -LR=0.01
+
+
+// clustering
+-log=info -program=Lloyd-clustering -partitions=120 -codegen=true -fixpointTask=false -init=hdfs://scai01.cs.ucla.edu:9000/clash/datasets/taxi/taxi_parsed/verticalization/init.csv -point=hdfs://scai01.cs.ucla.edu:9000/clash/datasets/taxi/taxi_parsed/verticalization/point.csv -output=hdfs://scai01.cs.ucla.edu:9000/clash/datasets/taxi/output/Lloyd.out
+
+
+#1M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/1/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/1/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/1/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/1/point.csv -output=testdata/results/Lloyd.out
+
+#2M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/2/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/2/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/2/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=15 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/2/point.csv -output=testdata/results/Lloyd.out
+
+#4M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/4/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/4/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/4/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/4/point.csv -output=testdata/results/Lloyd.out
+
+#8M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/8/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/8/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/8/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/8/point.csv -output=testdata/results/Lloyd.out
+
+#16M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/16/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/16/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/16/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=30 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/16/point.csv -output=testdata/results/Lloyd.out
+
+#32M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/32/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/32/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/32/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/32/point.csv -output=testdata/results/Lloyd.out
+
+#64M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/64/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/64/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/64/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/64/point.csv -output=testdata/results/Lloyd.out
+
+#128M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/128/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/128/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/128/point.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=60 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/128/point.csv -output=testdata/results/Lloyd.out
+
+#256M records, 4, 8, 16, 32 centers
+./run.sh -log=error -program=Lloyd -partitions=120 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/4/init.csv -point=/home/clash/sparks/kddlog-data/clustering/256/point-2.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=120 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/8/init.csv -point=/home/clash/sparks/kddlog-data/clustering/256/point-2.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=120 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/16/init.csv -point=/home/clash/sparks/kddlog-data/clustering/256/point-2.csv -output=testdata/results/Lloyd.out
+./run.sh -log=error -program=Lloyd -partitions=120 -maxIterations=20 -codegen=true -fixpointTask=false -init=/home/clash/sparks/kddlog-data/clustering/centers/32/init.csv -point=/home/clash/sparks/kddlog-data/clustering/256/point-2.csv -output=testdata/results/Lloyd.out
+
+//Frequent Item Set: Apriori-Simple
+#1
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -output=testdata/freqpat/1/sec-10 -MS=1000
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -output=testdata/freqpat/1/sec-15 -MS=1500
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -output=testdata/freqpat/1/sec-20 -MS=2000
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -output=testdata/freqpat/1/sec-25 -MS=2500
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -output=testdata/freqpat/1/sec-30 -MS=3000
+#2
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -output=testdata/freqpat/2/sec-10 -MS=2000
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -output=testdata/freqpat/2/sec-15 -MS=3000
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -output=testdata/freqpat/2/sec-20 -MS=4000
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -output=testdata/freqpat/2/sec-25 -MS=5000
+./run.sh -log=error -program=apriori-simple -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -output=testdata/freqpat/2/sec-30 -MS=6000
+#4
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -output=testdata/freqpat/4/sec-10 -MS=4000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -output=testdata/freqpat/4/sec-15 -MS=6000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -output=testdata/freqpat/4/sec-20 -MS=8000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -output=testdata/freqpat/4/sec-25 -MS=10000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -output=testdata/freqpat/4/sec-30 -MS=12000
+#8
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -output=testdata/freqpat/8/sec-10 -MS=8000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -output=testdata/freqpat/8/sec-15 -MS=12000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -output=testdata/freqpat/8/sec-20 -MS=16000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -output=testdata/freqpat/8/sec-25 -MS=20000
+./run.sh -log=error -program=apriori-simple -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -output=testdata/freqpat/8/sec-30 -MS=24000
+#16
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -output=testdata/freqpat/16/sec-10 -MS=16000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -output=testdata/freqpat/16/sec-15 -MS=24000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -output=testdata/freqpat/16/sec-20 -MS=32000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -output=testdata/freqpat/16/sec-25 -MS=40000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -output=testdata/freqpat/16/sec-30 -MS=48000
+#32
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -output=testdata/freqpat/32/sec-10 -MS=32000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -output=testdata/freqpat/32/sec-15 -MS=48000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -output=testdata/freqpat/32/sec-20 -MS=64000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -output=testdata/freqpat/32/sec-25 -MS=80000
+./run.sh -log=error -program=apriori-simple -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -output=testdata/freqpat/32/sec-30 -MS=96000
+
+#64
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -output=testdata/freqpat/64/sec-10 -MS=64000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -output=testdata/freqpat/64/sec-15 -MS=96000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -output=testdata/freqpat/64/sec-20 -MS=128000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -output=testdata/freqpat/64/sec-25 -MS=160000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -output=testdata/freqpat/64/sec-30 -MS=192000
+
+
+#128
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -output=testdata/freqpat/128/sec-10 -MS=128000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -output=testdata/freqpat/128/sec-15 -MS=192000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -output=testdata/freqpat/128/sec-20 -MS=256000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -output=testdata/freqpat/128/sec-25 -MS=320000
+./run.sh -log=error -program=apriori-simple -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -output=testdata/freqpat/128/sec-30 -MS=384000
+
+
+#256
+./run.sh -log=error -program=apriori-simple -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -output=testdata/freqpat/256/sec-10 -MS=256000
+./run.sh -log=error -program=apriori-simple -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -output=testdata/freqpat/256/sec-15 -MS=384000
+./run.sh -log=error -program=apriori-simple -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -output=testdata/freqpat/256/sec-20 -MS=512000
+./run.sh -log=error -program=apriori-simple -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -output=testdata/freqpat/256/sec-25 -MS=640000
+./run.sh -log=error -program=apriori-simple -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -output=testdata/freqpat/256/sec-30 -MS=768000
+
+
+//Frequent Item Set: Apriori-Whole
+#1
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -sec=testdata/freqpat/1/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=1000
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -sec=testdata/freqpat/1/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=1500
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -sec=testdata/freqpat/1/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=2000
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -sec=testdata/freqpat/1/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=2500
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/1/mbsk.csv -sec=testdata/freqpat/1/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=3000
+#2
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -sec=testdata/freqpat/2/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=2000
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -sec=testdata/freqpat/2/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=3000
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -sec=testdata/freqpat/2/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=4000
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -sec=testdata/freqpat/2/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=5000
+./run.sh -log=error -program=apriori-whole -partitions=15 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/2/mbsk.csv -sec=testdata/freqpat/2/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=6000
+#4
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -sec=testdata/freqpat/4/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=4000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -sec=testdata/freqpat/4/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=6000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -sec=testdata/freqpat/4/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=8000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -sec=testdata/freqpat/4/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=10000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/4/mbsk.csv -sec=testdata/freqpat/4/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=12000
+#8
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -sec=testdata/freqpat/8/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=8000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -sec=testdata/freqpat/8/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=12000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -sec=testdata/freqpat/8/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=16000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -sec=testdata/freqpat/8/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=20000
+./run.sh -log=error -program=apriori-whole -partitions=30 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/8/mbsk.csv -sec=testdata/freqpat/8/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=24000
+#16
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -sec=testdata/freqpat/16/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=16000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -sec=testdata/freqpat/16/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=24000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -sec=testdata/freqpat/16/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=32000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -sec=testdata/freqpat/16/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=40000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/16/mbsk.csv -sec=testdata/freqpat/16/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=48000
+#32
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -sec=testdata/freqpat/32/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=32000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -sec=testdata/freqpat/32/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=48000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -sec=testdata/freqpat/32/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=64000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -sec=testdata/freqpat/32/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=80000
+./run.sh -log=error -program=apriori-whole -partitions=60 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/32/mbsk.csv -sec=testdata/freqpat/32/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=96000
+
+#64
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -sec=testdata/freqpat/64/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=64000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -sec=testdata/freqpat/64/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=96000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -sec=testdata/freqpat/64/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=128000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -sec=testdata/freqp at/64/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=160000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/64/mbsk.csv -sec=testdata/freqpat/64/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=192000
+
+
+#128
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -sec=testdata/freqpat/128/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=128000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -sec=testdata/freqpat/128/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=192000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -sec=testdata/freqpat/128/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=256000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -sec=testdata/freqpat/128/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=320000
+./run.sh -log=error -program=apriori-whole -partitions=120 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/128/mbsk.csv -sec=testdata/freqpat/128/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=384000
+
+
+#256
+./run.sh -log=error -program=apriori-whole -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -sec=testdata/freqpat/256/sec-10.tsv -output=testdata/results/apriori-whole.out -MS=256000
+./run.sh -log=error -program=apriori-whole -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -sec=testdata/freqpat/256/sec-15.tsv -output=testdata/results/apriori-whole.out -MS=384000
+./run.sh -log=error -program=apriori-whole -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -sec=testdata/freqpat/256/sec-20.tsv -output=testdata/results/apriori-whole.out -MS=512000
+./run.sh -log=error -program=apriori-whole -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -sec=testdata/freqpat/256/sec-25.tsv -output=testdata/results/apriori-whole.out -MS=640000
+./run.sh -log=error -program=apriori-whole -partitions=240 -codegen=true -fixpointTask=false -mbsk=testdata/freqpat/256/mbsk.csv -sec=testdata/freqpat/256/sec-30.tsv -output=testdata/results/apriori-whole.out -MS=768000
+
+
+###################### dtree #################
+./run.sh -log=error -program=decision-tree -partitions=15 -maxIterations=5 -codegen=true -fixpointTask=false -pattern=../kddlog-data/dtree/real-sim/pattern.csv -iset=../kddlog-data/dtree/real-sim/iset.csv -train=../kddlog-data/dtree/real-sim/train.csv -dec=../kddlog-data/dtree/real-sim/dec.csv -expand=../kddlog-data/dtree/real-sim/expand.csv -output=testdata/results/dt.out
+./run.sh -log=error -program=decision-tree -partitions=120 -maxIterations=10 -codegen=true -fixpointTask=false -pattern=../kddlog-data/dtree/real-sim/pattern.csv -iset=../kddlog-data/dtree/real-sim/iset.csv -train=../kddlog-data/dtree/real-sim/train.csv -dec=../kddlog-data/dtree/real-sim/dec.csv -expand=../kddlog-data/dtree/real-sim/expand.csv -output=testdata/results/dt.out
+./run.sh -log=error -program=decision-tree -partitions=120 -maxIterations=15 -codegen=true -fixpointTask=false -pattern=../kddlog-data/dtree/real-sim/pattern.csv -iset=../kddlog-data/dtree/real-sim/iset.csv -train=../kddlog-data/dtree/real-sim/train.csv -dec=../kddlog-data/dtree/real-sim/dec.csv -expand=../kddlog-data/dtree/real-sim/expand.csv -output=testdata/results/dt.out
+./run.sh -log=error -program=decision-tree -partitions=120 -maxIterations=20 -codegen=true -fixpointTask=false -pattern=../kddlog-data/dtree/real-sim/pattern.csv -iset=../kddlog-data/dtree/real-sim/iset.csv -train=../kddlog-data/dtree/real-sim/train.csv -dec=../kddlog-data/dtree/real-sim/dec.csv -expand=../kddlog-data/dtree/real-sim/expand.csv -output=testdata/results/dt.out

@@ -1,0 +1,14 @@
+-- hint: shuffle
+
+database({
+  mbsk(Bno: integer, It: integer)
+}).
+
+csingles(It, count<Bno>) <- mbsk(Bno, It).
+fsingles(It) <- csingles(It, Ccnt), Ccnt > {MS}.
+cpairsC(Bno, It) <- fsingles(It), mbsk(Bno, It).
+cpairs(ItX, ItY, count<Bno>) <- cpairsC(Bno, ItX), cpairsC(Bno, ItY), ItX < ItY.
+fitset(M, ID, ItX) <- M=2, cpairs(ItX, ItY, Cno), Cno > {MS}, ID = ItX opc ItY.
+fitset(M, ID, ItY) <- M=2, cpairs(ItX, ItY, Cno), Cno > {MS}, ID = ItX opc ItY.
+
+query fitset(M, ID, It).

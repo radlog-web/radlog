@@ -1,0 +1,14 @@
+-- hint: shuffle
+
+database({
+  init(Node: integer, P: double),
+  matrix(From: integer, To: integer, W: double)
+}).
+
+rank(X, msum<(X,P)>) <- init(X, P).
+rank(X, msum<(Y,K)>) <- rank(Y, C), matrix(Y, X, W), K = C * W.
+
+sum_rank(sum<A>) <- rank(_, A).
+result(X, Pr) <- sum_rank(SR), rank(X, R), Pr = R / SR.
+
+query result(X, Y).

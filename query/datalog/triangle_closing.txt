@@ -1,0 +1,11 @@
+-- hint: broadcast
+
+database({
+  arc(From: integer, To: integer)
+}).
+
+uarc(X, Y) <- arc(X, Y).
+uarc(Y, X) <- arc(X, Y).
+triangle_closing(Y, Z, count<X>) <- uarc(X,Y), uarc(X,Z), Y ~= Z, ~uarc(Y,Z).
+
+query triangle_closing(A,B,C).

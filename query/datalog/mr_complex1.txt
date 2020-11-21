@@ -1,0 +1,32 @@
+-- hint: shuffle
+
+database({
+  a(X: integer, Y: integer)
+}).
+
+b(X, Y) <- a(X, Y).
+b(X, Z) <- c(Z), b(X, Y), Z = X.
+c(Y) <- b(X, Y).
+
+query b(X, Y).
+
+-- This query is a simplified (non-aggregate) version of the company-control query.
+-- It produces following plan, while c.Var_3 does not reflect its relationship with b.Y
+-- This is due to the ProgramGenerator.generateUniqueVariable() ignores the fact that a variable
+-- in recursive relation will be associated to different parts of other relations.
+-- c(Z), b(X, Y), Z = X. where c._ = b.X
+-- c(Y) <- b(X, Y). where c._ = b.Y
+--
+-- 0: b(Var_1, Var_2) <MUTUAL_RECURSIVE_CLIQUE>(Recursion: NONLINEAR, Evaluation Type: SemiNaive)
+-- Exit Rules:
+--  1: a(X, Y) <BASE_RELATION>
+-- Recursive Rules:
+--  1: (X, Var_3) <PROJECT>
+--   2: Var_3 = X <FILTER>
+--    3: () <JOIN>
+--     4: c(Var_3) <MUTUAL_RECURSIVE_CLIQUE>(Recursion: NONLINEAR, Evaluation Type: SemiNaive)
+--     Exit Rules:
+--     Recursive Rules:
+--      5: b(X, Y) <RECURSIVE_RELATION>
+--     4: b(X, Y) <RECURSIVE_RELATION>
+--

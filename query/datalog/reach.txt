@@ -1,0 +1,10 @@
+-- hint: shuffle
+
+database({
+  rc(A: integer, B: integer)
+}).
+
+reach(B) <- B={startvertex}.
+reach(B) <- reach(A), rc(A,B).
+
+query reach(B).

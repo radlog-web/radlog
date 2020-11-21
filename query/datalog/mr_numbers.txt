@@ -1,0 +1,12 @@
+-- hint: shuffle
+
+database({
+  d(X: integer)
+}).
+
+tc(X) <- X = 0.
+tc(Y) <- tc(X), Y = X + 5, X < 10.
+mt(Y) <- tc(Y).
+mt(R) <- mt(Y), R = Y + 2, Y > 0, Y < 10.
+
+query mt(R).

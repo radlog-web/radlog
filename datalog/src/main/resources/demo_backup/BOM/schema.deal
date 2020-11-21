@@ -1,0 +1,8 @@
+begin module "BOM".
+
+database( {
+	basic( Part:string, Days:integer),
+	assbl( Part:string, SubPart:string, Quant:integer)
+} ).
+
+end module.

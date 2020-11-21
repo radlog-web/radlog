@@ -1,0 +1,126 @@
+database({
+	predicate(predicateId:integer, name:string, depth:integer, type:string),
+	predicateDependency(predicateId:integer, childPredicateId:integer),
+	argument(argumentId:integer, type:string, name:string, datatype:string),
+	argumentPredicate(predicateId:integer, argumentId:integer),
+	binding(argumentId:integer, predicateId:integer, index:integer, binding:string)
+} ).
+
+node('FSMinMaxAggregateRelationNode', 'fs-aggregate').
+node('FSCountKeyValueAggregateRelationNode', 'fs-aggregate').
+node('FSCountDoubleAggregateRelationNode', 'fs-aggregate').
+node('CliqueNode', 'seminaive-recursive-clique').
+node('MutualCliqueNode', 'seminaive-recursive-clique').
+node('EMSNCliqueNode', 'fs-recursive-clique').
+node('MSNCliqueNode', 'fs-recursive-clique').
+node('FSCliqueNode', 'fs-recursive-clique').
+
+% The rules below are to identify program elements that can be optimized.  
+% General Overview of Optimizer:
+% Pipelining is the default execution mode.  We can improve execution by materializing certain nodes in the program:
+% 1) Materialize single instance FS cliques where results are materialized.  Then, parent node(s) will read directly from the aggregate relation.
+% 2) Materialize certain nodes to alleviate the downside of re-computation of pipelined operations
+%    a) If stratified aggregate has multiple instances and first instance has all-free binding
+%    b) If recursive clique has multiple instances
+%  Process:
+%    i) materialize first instance
+%    ii) replace other instances with special read-only node pointed at relation materialized by first instance     
+% Optimizer Rules:
+% I) Identify nodes to materialize (#1 & #2)
+% II) Identify nodes to replace with special read-only node (#2) 
+
+nodes_to_materialize(ID) <- basic_recursive_or_nodes_to_materialize(ID, _).
+nodes_to_materialize(ID) <- fs_recursive_or_nodes_to_materialize(ID, _).
+nodes_to_materialize(ID) <- fs_aggregates_to_materialize(ID, _).
+nodes_to_materialize(ID) <- stratified_aggregates_to_materialize(ID, _).
+%nodes_to_replace(ID, 'RecursiveOrNode') <- recursive_or_nodes_to_replace(ID, _).
+nodes_to_replace(ID, 'StratifiedAggregateRelationNode') <- aggregate_nodes_to_replace(ID, _).
+
+followed_by_comparison_predicate(ID, ComparisonNodeID) <- predicate(ID, _, Depth, 'RecursiveOrNode'), predicateDependency(ParentID, ID), predicateDependency(ParentID, ComparisonNodeID), 
+	ID < ComparisonNodeID, predicate(ComparisonNodeID, _, Depth, 'ComparisonAllBoundNode'), argumentPredicate(ID, Arg), argumentPredicate(ComparisonNodeID, Arg). 	
+	
+fs_cliques_with_comparison(ID, ComparisonNodeID, AggregateArgument) <- predicate(ID, _, _, 'RecursiveOrNode'), predicateDependency(ID, ChildID), predicate(ChildID, _, _, 'EMSNCliqueNode'), 
+	followed_by_comparison_predicate(ID, ComparisonNodeID), argumentPredicate(ID, AggregateArgument), argumentPredicate(ComparisonNodeID, AggregateArgument). 
+
+% materialize basic monotonic aggregate recursive nodes
+% recursiveornode -> emsncliquenode|msncliquenode|fscliquenode
+fs_recursive_or_nodes_to_materialize(ID, PredicateName) <- predicate(ID, PredicateName, Depth, 'RecursiveOrNode'), predicateDependency(ID, ChildID), 
+	predicate(ChildID, _, Depth+1, NodeType), node(NodeType, 'fs-recursive-clique'), first_occurrence(ID, PredicateName), has_all_free_bindings(ID),
+	~followed_by_comparison_predicate(ID, _).
+
+% materialize any fs clique that is a singular instance, regardless of bindings
+fs_recursive_or_nodes_to_materialize(ID, PredicateName) <- predicate(ID, PredicateName, Depth, 'RecursiveOrNode'), predicateDependency(ID, ChildID), 
+	predicate(ChildID, CliquePredicateName, Depth+1, NodeType), node(NodeType, 'fs-recursive-clique'), 
+	predicate_occurrence_count(CliquePredicateName, NodeType, N), N = 1, ~followed_by_comparison_predicate(ID, _).
+
+% materialize recursion that is used more than once
+basic_recursive_or_nodes_to_materialize(ID, PredicateName) <- multi_occurring_predicate(PredicateName, 'RecursiveOrNode'),
+	predicate(ID, PredicateName, Depth, 'RecursiveOrNode'), predicateDependency(ID, ChildID), node(NodeType, 'seminaive-recursive-clique'),  
+	predicate(ChildID, _, Depth+1, NodeType), first_occurrence(ID, PredicateName), has_all_free_bindings(ID).
+
+% replace any recursiveornode that is not the first instance of a multi-instance recursiveornode predicate  	
+%recursive_or_nodes_to_replace(ParentID, ParentPredicateName) <- node(NodeType, 'seminaive-recursive-clique'), multi_occurring_predicate(PredicateName, NodeType), 
+%	predicate(ID, PredicateName, _, NodeType), predicate(ID2, PredicateName, _, NodeType), ID2 < ID, 
+%	predicateDependency(ParentID, ID), predicate(ParentID, ParentPredicateName, _, 'RecursiveOrNode').
+	
+%recursive_or_nodes_to_replace(ID2, PredicateName) <- recursive_or_nodes_to_materialize(ID, PredicateName), predicate(ID, PredicateName, _, NodeType), 
+%	predicate(ID2, PredicateName, _, NodeType), ID ~= ID2.
+
+aggregate_nodes_to_replace(ID2, PredicateName) <- stratified_aggregates_to_materialize(ID, PredicateName), 
+	predicate(ID2, PredicateName, _, 'StratifiedAggregateRelationNode'), ID ~= ID2. 
+
+emsn_clique_node(ChildID) <- predicate(ID, _, Depth, 'RecursiveOrNode'), predicateDependency(ID, ChildID), predicate(ChildID, _, Depth+1, 'EMSNCliqueNode').
+
+% materialize fs aggregates if simple case of clique with child fs aggregate nodes
+% mutualcliques excluded
+% fs aggregate could be under clique node (emsncliquenode -> fs aggregate node)
+fs_aggregates_to_materialize(ChildID, PredicateName) <- emsn_clique_node(ID), 
+	fs_recursive_or_nodes_to_materialize(RecursiveOrNodeID, _), predicateDependency(RecursiveOrNodeID, ID),	
+	predicateDependency(ID, ChildID), 
+	predicate(ChildID, PredicateName, _, Type), node(Type, 'fs-aggregate').
+
+% fs aggregate could be under andNode (emsncliquenode -> orNode -> andNode -> fs aggregate node)
+fs_aggregates_to_materialize(GreatGrandChildID, PredicateName) <- emsn_clique_node(ID), 
+	fs_recursive_or_nodes_to_materialize(RecursiveOrNodeID, _), predicateDependency(RecursiveOrNodeID, ID), 
+	predicateDependency(ID, ChildID), 
+	predicate(ChildID, _, _, 'OrNode'), predicateDependency(ChildID, GrandChildID), 
+	predicate(GrandChildID, _, _, 'AndNode'), predicateDependency(GrandChildID, GreatGrandChildID), 
+	predicate(GreatGrandChildID, PredicateName, _, Type), node(Type, 'fs-aggregate').
+
+free_binding_count(ID, count<ID>) <- binding(_, ID, _, 'f').
+all_binding_count(ID, count<ID>) <- binding(_, ID, _, _).
+has_all_free_bindings(ID) <- all_binding_count(ID, N), free_binding_count(ID, N).
+
+predicate_occurrence_count(PredicateName, NodeType, count<PredicateName>) <- predicate(_, PredicateName, _, NodeType).
+multi_occurring_predicate(PredicateName, NodeType) <- predicate_occurrence_count(PredicateName, NodeType, N), N > 1.
+
+earlier_occurrence(ID, PredicateName) <- predicate(ID2, PredicateName, _, _), ID2 < ID.
+first_occurrence(ID, PredicateName) <- predicate(ID, PredicateName, _, _), ~earlier_occurrence(ID, PredicateName).
+
+% we want to materialize the first instance of a stratified aggregate but with all free bindings
+stratified_aggregates_to_materialize(ID, PredicateName) <- multi_occurring_predicate(PredicateName, 'StratifiedAggregateRelationNode'), 
+															first_occurrence(ID, PredicateName), has_all_free_bindings(ID).
+
+% find other instances of the given stratified aggregate
+% then, once ID is materialized, we can mark the other instances materialized as well 
+other_instances(ID, NodeType, OtherID) <- predicate(ID, PredicateName, _, NodeType), predicate(OtherID, PredicateName, _, NodeType), ID ~= OtherID.
+
+% find baserelationnodes to represent as bplustrees
+% case 1) only 1 node for the base relation
+bplustree_base_relations(ID) <- predicate_occurrence_count(PredicateName, 'BaseRelationNode', N), N = 1, predicate(ID, PredicateName, _, 'BaseRelationNode').
+
+% case 2) multiple nodes for the base relation, but all have all free bindings 
+predicate_occurrence_with_all_free_bindings(PredicateName, NodeType, count<PredicateName>) <- predicate(ID, PredicateName, _, NodeType), has_all_free_bindings(ID). 
+bplustree_base_relations(ID) <- predicate_occurrence_count(PredicateName, 'BaseRelationNode', N), N > 1, 
+									predicate_occurrence_with_all_free_bindings(PredicateName, 'BaseRelationNode', N), predicate(ID, PredicateName, _, 'BaseRelationNode').
+
+% case 3) multiple nodes for base relation, but they are either all free bindings or bf...f (i.e. both can use the same tuplestore).
+all_free_nodes(ID, PredicateName, NodeType) <- predicate(ID, PredicateName, _, NodeType), has_all_free_bindings(ID).
+first_argument_bound_nodes(ID, PredicateName, NodeType) <- predicate(ID, PredicateName, _, NodeType), binding(_, ID, 0, 'b'), 
+															all_binding_count(ID, N), free_binding_count(ID, M), M = N-1.
+mixed_nodes(ID, PredicateName, NodeType) <- first_argument_bound_nodes(ID, PredicateName, NodeType).
+mixed_nodes(ID, PredicateName, NodeType) <- all_free_nodes(ID, PredicateName, NodeType).
+count_mixed_nodes(PredicateName, NodeType, count<ID>) <- mixed_nodes(ID, PredicateName, NodeType).
+bplustree_base_relations(ID) <-  count_mixed_nodes(PredicateName, 'BaseRelationNode', N), 
+									predicate_occurrence_count(PredicateName, 'BaseRelationNode', N), 
+									predicate(ID, PredicateName, _, 'BaseRelationNode').

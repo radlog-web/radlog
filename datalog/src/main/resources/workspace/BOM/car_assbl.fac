@@ -1,0 +1,56 @@
+assbl('sedan', 'wheel', 4).
+assbl('sedan', 'body', 1).
+assbl('sedan', 'fueling system', 1).
+assbl('sedan', 'electrical system', 1).
+assbl('wheel', 'hub', 1).
+assbl('wheel', 'tire', 1).
+assbl('wheel', 'wheel disk', 1).
+assbl('wheel', 'wheel cover', 1).
+assbl('wheel', 'flap', 1).
+assbl('wheel', 'rim', 1).
+assbl('wheel', 'lug nut', 8).
+assbl('tire', 'stem', 1).
+assbl('body', 'frame', 1).
+assbl('body', 'sash', 4).
+assbl('body', 'roof', 1).
+assbl('body', 'engine hood', 1).
+assbl('body', 'engine mounting', 1).
+assbl('body', 'front bumper', 1).
+assbl('body', 'back bumper', 1).
+assbl('body', 'bracket', 1).
+assbl('body', 'wind shield', 1).
+assbl('body', 'wind shield wiper', 2).
+assbl('body', 'left front door', 1).
+assbl('body', 'right front door', 1).
+assbl('body', 'right rear door', 1).
+assbl('body', 'left rear door', 1).
+assbl('left front door', 'front left side window', 1).
+assbl('right front door', 'front right side window', 1).
+assbl('left rear door', 'rear left side window', 1).
+assbl('right rear door', 'rear right side window', 1).
+assbl('left front door', 'door handle', 1).
+assbl('right front door', 'door handle', 1).
+assbl('left rear door', 'door handle', 1).
+assbl('right rear door', 'door handle', 1).
+assbl('frame', 'lower arm', 1).
+assbl('frame', 'upper arm', 1).
+assbl('frame', 'steering wheel', 1).
+assbl('frame', 'parking brake lever', 1).
+assbl('frame', 'brake', 1).
+assbl('frame', 'clutch', 1).
+assbl('frame', 'mainshaft', 1).
+assbl('frame', 'countershaft', 1).
+assbl('fueling system', 'fuel tank', 1).
+assbl('fueling system', 'fuel pipe', 1).
+assbl('fueling system', 'engine', 1).
+assbl('fueling system', 'air cleaner', 1).
+assbl('fueling system', 'exhaust muffler', 1).
+assbl('fueling system', 'EGR tube', 1).
+assbl('electrical system', 'battery', 1).
+assbl('electrical system', 'central door lock', 1).
+assbl('electrical system', 'distributor', 1).
+assbl('electrical system', 'digital clock', 1).
+assbl('electrical system', 'car audio', 1).
+assbl('electrical system', 'burglar alarm', 1).
+assbl('electrical system', 'head light', 2).
+assbl('electrical system', 'tail light', 2).

@@ -1,0 +1,11 @@
+-- hint: broadcast
+-- assume the input data is in canonical format
+
+database({
+  arc(From: integer, To: integer)
+}).
+
+triangles(X,Y,Z) <- arc(X,Y), arc(Y,Z), arc(X,Z).
+-- triangle_count(count<_>) <- triangles(X,Y,Z).
+
+query triangles(X,Y,Z).

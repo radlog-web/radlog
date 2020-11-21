@@ -1,0 +1,11 @@
+-- hint: shuffle
+
+database({
+  report(Mgr: integer, Emp: integer)
+}).
+
+dept(Emp, mcount<(Emp,1)>) <- report(_, Emp).
+dept(Mgr, mcount<(Emp,SubSum)>) <- dept(Emp, SubSum), report(Mgr, Emp).
+result(Mgr, Total) <- dept(Mgr, Total).
+
+query result(Mgr, Total).

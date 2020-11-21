@@ -1,0 +1,11 @@
+-- hint: shuffle
+
+database({
+  c(X: integer, Y: integer)
+}).
+
+b(X,Y) <- a(X,Y).
+a(X,Y) <- c(X,Y).
+a(X,Y) <- b(X,Y).
+
+query a(X,Y).

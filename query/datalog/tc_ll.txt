@@ -1,0 +1,10 @@
+-- hint: broadcast
+
+database({
+  arc(A: integer, B: integer)
+}).
+
+tc(A,B) <- arc(A,B).
+tc(A,B) <- tc(A,C), arc(C,B).
+
+query tc(A, B).

@@ -1,0 +1,43 @@
+basic("hub", 2).
+basic("wheel disk",7).
+basic("wheel cover",3).
+basic("flap", 2).
+basic("rim", 5).
+basic("lug nut", 3).
+basic("stem", 2).
+basic("sash", 7).
+basic("roof", 5).
+basic("engine hood", 1).
+basic("engine mounting", 2).
+basic("front bumper", 4).
+basic("back bumper", 3).
+basic("bracket", 2).
+basic("wind shield", 3).
+basic("wind shield wiper", 1).
+basic("front left side window",3).
+basic("front right side window",3).
+basic("rear left side window",3).
+basic("rear right side window",3).
+basic("door handle",1).
+basic("brake", 1).
+basic("clutch", 2).
+basic("mainshaft", 31).
+basic("countershaft", 26).
+basic("lower arm", 25).
+basic("upper arm", 25).
+basic("steering wheel", 2).
+basic("parking brake lever", 1).
+basic("fuel tank", 4).
+basic("fuel pipe", 2).
+basic("engine", 15).
+basic("air cleaner", 1).
+basic("exhaust muffler", 1).
+basic("EGR tube", 1).
+basic("battery", 1).
+basic("central door lock", 1).
+basic("distributor", 2).
+basic("digital clock", 3).
+basic("caraudio", 8).
+basic("burglar alarm", 5).
+basic("head light", 10).
+basic("tail light", 7).

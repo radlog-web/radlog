@@ -1,0 +1,10 @@
+-- hint: shuffle
+
+database({
+  arc(X: integer, Y: integer)
+}).
+
+mcc(X, mmin<X>) <- arc(X, _).
+mcc(Y, mmin<V>) <- mcc(X, V), arc(X, Y).
+cc(X, min<Y>) <- mcc(X, Y).
+query cc(X, Y).

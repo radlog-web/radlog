@@ -1,0 +1,11 @@
+-- hint: shuffle
+
+database({
+  arc(X: integer, Y: integer)
+}).
+
+mcc(X, X) <- arc(X, _).
+mcc(Y, V) <- mcc(X, V), arc(X, Y).
+cc(X, min<Y>) <- mcc(X, Y).
+result(countd<Y>) <- cc(_, Y).
+query result(A).

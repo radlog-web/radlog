@@ -1,0 +1,11 @@
+-- hint: shuffle
+
+database({
+    ownedshares(X: integer, Y: integer, P: double)
+}).
+
+cshares(Y, Z, mmax<P>) <- ownedshares(Y, Z, P).
+cshares(X, Z, msum<(Y, P)>) <- bought(X, Y), cshares(Y, Z, P).
+bought(X, Y) <- cshares(X, Y, P), X ~= Y, P > 0.5.
+
+query cshares(Y, Z, P).

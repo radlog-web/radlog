@@ -1,0 +1,12 @@
+-- hint: shuffle
+
+database({
+  sales(M: integer, P: integer),
+  sponsor(M1: integer, M2: integer)
+}).
+
+bonus(P1, M, msum<(M,B)>) <- sales(M, P), B = (P * 0.1), P1 = P +1.
+bonus(P, M1, msum<(M2,B)>) <- bonus(P, M2, B2), sponsor(M1, M2), B = (B2 * 0.5).
+result(M, B) <- bonus(P, M, B).
+
+query result(M, B).

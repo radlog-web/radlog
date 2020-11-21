@@ -1,0 +1,13 @@
+-- hint: shuffle
+
+database({
+  init(J: integer, Cno: integer, Dim: integer, Val: double),
+  point(Pno: integer, Dim: integer, Val: double)
+}).
+
+center(J, Cno, Dim, mmin<Val>) <- init(J, Cno, Dim, Val).
+center(J1, Cno, Dim, mavg<Val>) <- mindist(J, Pno, Cno, Msm), point(Pno, Dim, Val), J1=J+1.
+mindist(J, Pno, cmin<Cno>, mmin<T>) <- dist(J, Pno, Cno, Dsm), T = Dsm+1-1.
+dist(J, Pno, Cno, msum<(Dim,SqDis)>) <-  point(Pno, Dim, Val), center(J, Cno, Dim, CVal), SqDis = (Val-CVal)*(Val-CVal).
+
+query center(J, Cno, Dim, Val).

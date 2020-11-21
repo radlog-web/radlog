@@ -1,0 +1,47 @@
+
+//== stratified suite ==
+delivery_stratified: -assbl=testdata/assbl.csv -basic=testdata/basic.csv
+cc_d_stratified: -arc=testdata/cc.csv
+
+//== simple datalog suite ==
+tc_ll: -arc=testdata/arc.csv
+tc_ll: -arc=testdata/arc.csv -packedBroadcast=true
+sg: -rel=testdata/sg1.csv
+sg: -rel=testdata/sg1.csv -packedBroadcast=true
+sg: -rel=testdata/sg2.csv
+sg: -rel=testdata/sg2.csv -packedBroadcast=true
+apsp: -warc=testdata/s1.csv
+apsp: -warc=testdata/s1.csv -packedBroadcast=true
+sssp: -warc=testdata/s1.csv -startvertex=1
+cc_d: -arc=testdata/cc.csv
+cc_all: -arc=testdata/cc.csv
+reach: -rc=testdata/rc1.csv -startvertex=1
+count_paths: -rc=testdata/rc1.csv -startvertex=1
+count_paths: -rc=testdata/rc2.csv -startvertex=1
+count_paths_all: -rc=testdata/rc2.csv
+coalesce: -inter=testdata/coalesce.csv
+delivery: -assbl=testdata/assbl.csv -basic=testdata/basic.csv
+management: -report=testdata/mgr.csv
+mlm: -sales=testdata/sales.csv -sponsor=testdata/sponsor.csv
+
+//== mr suite ==
+mr_test1: -c=testdata/arc.csv
+mr_odd_even: -start=testdata/init_odds.csv -max_odd=21
+mr_numbers: -d=testdata/d.csv
+
+//== mr aggr suite ==
+mr_attend: -organizer=testdata/attend/organizer1.csv -friend=testdata/attend/friend1.csv -threshold=1
+mr_attend: -organizer=testdata/attend/organizer1.csv -friend=testdata/attend/friend1.csv -threshold=2
+mr_attend: -organizer=testdata/attend/organizer1.csv -friend=testdata/attend/friend1.csv -threshold=3
+mr_attend: -organizer=testdata/attend/organizer2.csv -friend=testdata/attend/friend2.csv -threshold=1
+mr_attend: -organizer=testdata/attend/organizer2.csv -friend=testdata/attend/friend2.csv -threshold=2
+mr_attend: -organizer=testdata/attend/organizer2.csv -friend=testdata/attend/friend2.csv -threshold=3
+mr_attend: -organizer=testdata/attend/organizer2.csv -friend=testdata/attend/friend2.csv -threshold=4
+
+ == skip suite ==
+//mr_complex1: -a=testdata/cp1.csv
+//mr_company_control: -ownedshares=testdata/company_control.csv
+//pagerank: -start=testdata/pagerank/start.csv -matrix=testdata/pagerank/matrix.csv
+bgd-lr: -start=testdata/bgd/start.csv -vhouse=testdata/bgd/vhouse.csv -N=2 -LR=0.01
+//bgd-lr-mb: -start=testdata/bgd/start.csv -vhouse=testdata/bgd/vhouse.csv -N=2 -LR=0.01 -BS=1
+//tc_nl: -arc=testdata/arc.csv

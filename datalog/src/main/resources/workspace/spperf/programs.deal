@@ -1,0 +1,40 @@
+begin module "spperf".
+
+database({ 
+	arcW(X:integer, Y:integer, C:integer)
+}).
+index(arcW, [0]).
+
+% stratified negation
+%export shortestpath(A,B,C).
+%path(X,Y,C) <- arcW(X,Y,C).
+%path(X,Y,C) <- path(X,Z,C1), arcW(Z,Y,C2), C=C1+C2.
+%shortestpath(X,Y,C) <- path(X,Y,C), ~shorter(X,Y,C).
+%shorter(X,Y,C) <- path(X,Y,C1), C1 < C.
+
+% stratified aggregate
+export shortestpath(A,B,C).
+path(X,Y,C) <- arcW(X,Y,C).
+%path(X,Y,C) <- path(X,Z,C1), arcW(Z,Y,C2), C=C1+C2.
+path(X,Y,C) <- path(X,Z,C1), path(Z,Y,C2), C=C1+C2.
+shortestpath(X,Y,min<C>) <- path(X,Y,C).
+
+% Example 20 - DeAL
+export floydsshortestpath(A,B,C).
+fpath(X,Y,fsmax<C>) <- arcW(X, Y, D), C = 1/D.
+fpath(X,Z,fsmax<C>) <- fpath(X, Y, C1), fpath(Y, Z, C2), C = 1/(1/C1 + 1/C2).
+floydsshortestpath(X, Z, min<D>) <- fpath(X, Z, C), D = 1/C.
+
+% XY STRATIFIED PROGRAM
+%floyd's least path
+export floyd_results(A, B, C).
+
+delta_flp(0, X, Y, C) <- arcW(X,Y,C).
+delta_flp(J+1, X, Z, min<C>) <- delta_flp(J, X, Y, C1), arcW(Y, Z, C2), C=C1+C2, if (all_flp(J, X, Z, C3) then C3>C).
+all_flp(J+1, X, Z, C) <- all_flp(J, X, Z, C), ~delta_flp(J+1, X, Z, _).
+all_flp(J, X, Z, C) <- delta_flp(J, X, Z, C).
+
+lastfloyd(I) <- delta_flp(I, _, _, _), ~delta_flp(I+1, _, _, _).
+floyd_results(X, Y, C) <- lastfloyd(I), all_flp(I, X, Y, C).
+
+end module.

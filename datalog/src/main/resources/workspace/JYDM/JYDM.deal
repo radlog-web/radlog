@@ -1,0 +1,25 @@
+begin module "JYDM".
+database ({
+	bc(X:integer,K:float),
+	g(N:float, K:float),
+	followed(id:integer, followerId:integer),
+	source(X:integer)
+}).
+
+export b(A).
+database ({
+	bc(X:integer,K:float),
+	g(N:float, K:float),
+	followed(id:integer, followerId:integer),
+	source(X:integer)
+}).
+
+export b(A).
+
+countFollowed(X,fscnt<Y>) <- followed(Y,X).
+coeff(X,C) <- countFollowed(X,K2), bc(X,V1), g(K2,V3), C=V1*(V3/K2). 
+weightedFollow(X,fscnt<Y>) <- followed(Y,X), b(Y).
+b(X) <- source(X).
+b(X) <- coeff(X, C),  weightedFollow(X,K), K >=1/C.
+
+end module.

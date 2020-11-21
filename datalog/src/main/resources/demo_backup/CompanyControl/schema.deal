@@ -1,0 +1,7 @@
+begin module "CompanyControl".
+
+database({
+	owned_shares(Controller:string, Controllee:string, Percentage:integer)
+}).
+
+end module.

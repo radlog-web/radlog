@@ -1,0 +1,12 @@
+-- hint: shuffle
+
+database({
+  start(X: integer)
+}).
+
+odd(X) <- start(X).
+odd(Y) <- even(X), Y = X + 1.
+even(Y) <- odd(X), Y = X + 1, X < {max_odd}.
+
+-- query even(Y).
+query odd(Y).

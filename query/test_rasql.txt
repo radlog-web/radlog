@@ -1,0 +1,20 @@
+
+== simple rasql suite ==
+test1: -s1=testdata/s1.csv
+test2: -s1=testdata/s1.csv
+tc_ll: -arc=testdata/arc.csv
+sg: -rel=testdata/sg1.csv
+sg: -rel=testdata/sg2.csv
+apsp: -warc=testdata/s1.csv
+sssp: -warc=testdata/s1.csv -startvertex=1
+cc: -arc=testdata/cc.csv
+cc_d: -arc=testdata/cc.csv
+cc_all: -arc=testdata/cc.csv
+reach: -rc=testdata/rc1.csv -startvertex=1
+count_paths: -rc=testdata/rc1.csv -startvertex=1
+count_paths: -rc=testdata/rc2.csv -startvertex=1
+count_paths_all: -rc=testdata/rc2.csv
+coalesce: -inter=testdata/coalesce.csv
+delivery: -assbl=testdata/assbl.csv -basic=testdata/basic.csv
+management: -report=testdata/mgr.csv
+mlm: -sales=testdata/sales.csv -sponsor=testdata/sponsor.csv

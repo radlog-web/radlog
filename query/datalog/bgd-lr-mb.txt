@@ -1,0 +1,13 @@
+-- hint: shuffle
+
+database({
+  start(J: integer, Col: integer, Val: double),
+  vhouse(ID: integer, Col: integer, Val: double, Price: double)
+}).
+
+model(J, Col, mmax<Val>) <- start(J, Col, Val).
+model(J1, Col, mmax<Val1>) <- model(J, Col, Val), gradient(J, Col, G), J1 = (J + 1), Val1 = (Val + ((G / {N}) * {LR})).
+gradient(J, Col, msum<(ID, G)>) <- vhouse(ID, Col, Val, Price), cp(J, ID, Predict), G = (2 * (Price - Predict)) * Val.
+cp(J, ID, msum<(Col, Prod)>) <- vhouse(ID, Col, Val, _), model(J, Col, Val1), Prod = Val * Val1, (ID mod ({N} / {BS})) = (J mod ({N} / {BS})) .
+
+query model(J, Col, Val).

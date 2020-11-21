@@ -1,0 +1,14 @@
+requires(sam, 2).
+requires(terry, 5).
+requires(penny, 1).
+
+organizer(tom).
+organizer(sue).
+organizer(pat).
+
+friend(marc, sue).
+friend(marc, tom).
+friend(marc, pat).
+friend(ann, tom). 
+friend(ann, pat).
+friend(ann, marc).

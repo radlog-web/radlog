@@ -1,0 +1,13 @@
+-- hint: shuffle
+
+database({
+  organizer(X: integer),
+  friend(X: integer, Y: integer)
+}).
+
+cntComing(Y, mcount<(X,1)>) <- attend(X), friend(X, Y).
+temp(X, mcount<(Y,1)>) <- cntComing(Y, X).
+attend(X) <- organizer(X).
+attend(X) <- temp(X, N), N >= {threshold}.
+
+query attend(X).

@@ -1,0 +1,11 @@
+-- hint: shuffle
+
+database({
+  warc(From: integer, To: integer, Cost: integer)
+}).
+
+sp(To, C) <- To={startvertex}, C=0.
+sp(To2, C) <- sp(To1, C1), warc(To1, To2, C2), C=C1+C2.
+result(To, min<C>) <- sp(To, C).
+
+query result(T, C).

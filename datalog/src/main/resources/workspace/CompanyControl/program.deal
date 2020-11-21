@@ -1,0 +1,14 @@
+begin module "CompanyControl".
+
+database({
+	owned_shares(Controller:string, Controllee:string, Percentage:integer)
+}).
+
+% Company controls another by owning > 50% of shares
+export bought(C1,C2).
+export bought($C1,C2).
+cshares(C2,C3,direct,fsmax<P>) <- owned_shares(C2,C3,P).
+cshares(C1,C3,indirect,fscnt<(C2,P)>) <- bought(C1,C2), cshares(C2,C3,_,P).
+bought(C1,C2) <- cshares(C1,C2,_,P), P > 50, C1 ~= C2.
+
+end module.

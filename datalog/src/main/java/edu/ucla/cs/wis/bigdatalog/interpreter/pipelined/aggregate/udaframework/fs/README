@@ -1,0 +1,4 @@
+8/23/2014 APS
+The classes in this package will work, with the exception of FSMaxBased2SingleAggregateRelationNode, but UDAs for monotonic aggregates are not
+ yet supported in the language (grammar).  Hence, the edu.ucla.cs.wis.bigdatalog.interpreter.pipelined.aggregate.fs package has better performance 
+ and is the currently used package for monotonic aggregate execution.  

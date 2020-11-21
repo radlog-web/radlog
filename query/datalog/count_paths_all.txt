@@ -1,0 +1,10 @@
+-- hint: broadcast
+
+database({
+  rc(A: integer, B: integer)
+}).
+
+paths(X, Y, mcount<(X,1)>) <- rc(X, Y).
+paths(X, Y, mcount<(Z,C)>) <- paths(X, Z, C), rc(Z, Y).
+result(X, Y, max(C)) <- paths(X, Y, C).
+query paths(X, Y, C).

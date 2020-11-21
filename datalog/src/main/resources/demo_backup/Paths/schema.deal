@@ -1,0 +1,7 @@
+begin module "Paths".
+database( {
+	arc(X:string, Y:string),
+	arcW(X:string, Y:string, D:float)
+} ).
+
+end module.

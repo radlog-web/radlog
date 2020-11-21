@@ -1,0 +1,18 @@
+begin module "Markov".
+export rank(A,B).
+export p_norm(A,B).
+
+% http://infolab.stanford.edu/~ullman/mmds/ch5.pdf page 164
+database( {
+	w_matrix(nodeFrom:integer, nodeTo:integer, weight:float),
+	p_state_init(node:integer, prob:float)
+} ).
+
+p_state(X, fsmax<P>) <- p_state_init(X,P).
+p_state(X, fscnt<(Y,(C,W))>) <- p_state(Y,C), w_matrix(Y,X,W).
+rank(X, max<K>) <- p_state(X,K).
+
+sum_rank(sum<A>) <- rank(_,A).
+p_norm(X,Pr) <- sum_rank(SR), rank(X,R), Pr = R / SR.
+
+end module. 

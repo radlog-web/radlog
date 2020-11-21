@@ -1,0 +1,10 @@
+-- hint: broadcast
+
+database({
+  rel(Parent: integer, Child: integer)
+}).
+
+sg(X,Y) <- rel(Parent,X), rel(Parent,Y), X ~= Y.
+sg(X,Y) <- rel(A,X), sg(A,B), rel(B,Y).
+
+query sg(X, Y).

@@ -1,0 +1,21 @@
+begin module "Attend".
+
+database ({
+	friend(name1:string, name2:string),
+	organizer(name:string),
+	requires(name:string, number:integer)
+}).
+
+export attend(A).
+export attend($A).
+cntfriends(Y, fscnt<X>) <- attend(X), friend(Y,X).
+attend(X) <- organizer(X).
+attend(Y) <- cntfriends(Y, N), N >= 3.
+
+export join(A).
+export join($A).
+cntJoin(Y, fscnt<X>) <- friend(Y,X), join(X).
+join(X) <- organizer(X). 
+join(Y) <- requires(Y,K), cntJoin(Y, N), N >= K.
+
+end module.

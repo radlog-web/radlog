@@ -1,0 +1,10 @@
+-- hint: shuffle
+
+database({
+  arc(A: integer, B: integer)
+}).
+
+tc(A,B) <- arc(A,B).
+tc(A,B) <- tc(A,C), tc(C,B).
+
+query tc(A, B).

@@ -1,0 +1,9 @@
+begin module "Markov".
+
+database({
+  a(fromNode:integer, toNode:integer, prob:float),
+  p(emitted:integer, state:integer, likelihood:float),
+  pi(node:integer, likelihood:float)
+}).
+
+end module.

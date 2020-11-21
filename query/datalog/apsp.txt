@@ -1,0 +1,11 @@
+-- hint: broadcast
+
+database({
+  warc(From: integer, To: integer, Cost: integer)
+}).
+
+sp(A, B, mmin<C>) <- warc(A, B, C).
+sp(A, B, mmin<D>) <- sp(A, C, D1), warc(C, B, D2), D=D1+D2.
+result(A, B, min<C>) <- sp(A, B, C).
+
+query result(A, B, C).

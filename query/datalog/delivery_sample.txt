@@ -1,0 +1,10 @@
+-- hint: shuffle
+
+database({
+  assbl(Part: integer, Sub: integer),
+  basic(Part: integer, Days: integer)
+}).
+
+actualdays(Part, sample<Part>, mmax<Days>) <- basic(Part, Days).
+actualdays(Part, sample<Sub>, mmax<Days>) <- assbl(Part, Sub), actualdays(Sub, _, Days).
+query actualdays(P, S, D).
