@@ -6,7 +6,7 @@ and the distributed execution engine for the RaSQL (Recursive-aggregate-SQL)
 language and the traditional Datalog. It supersedes the BigDatalog system
 that previously developed at UCLA.
 
-<https://rasql.org/>
+<https://rad-log.com/>
 
 ## Building RaDlog
 
@@ -33,28 +33,6 @@ SBT is typically faster than Maven in development build.
 To build packaged jars, run:
 
     build/sbt package
-
-## Interactive Scala Shell
-
-The easiest way to start using RaSQL is through the Scala shell:
-
-    ./bin/spark-shell --jars datalog/target/scala-2.11/spark-datalog_2.11-2.0.3-SNAPSHOT.jar
-
-**Note the parameter `--jars datalog/...` includes key classes supporting the RaSQL runtime, if omitted, you will get the `ClassNotFoundException`.**
- 
-Try the following command, TODO:
-
-    scala> 
-
-## Interactive Python Shell
-
-Alternatively, if you prefer Python, you can use the Python shell:
-
-    ./bin/pyspark --jars datalog/target/scala-2.11/spark-datalog_2.11-2.0.3-SNAPSHOT.jar
-
-And run the following command, TODO:
-
-    >>>
      
 ## Example Programs
 
@@ -63,16 +41,16 @@ The example/test data locate in [testdata](testdata) directory.
 
 ## Running Tests
 
-Tests profiles are located in [query/test_rasql.txt](query/test_rasql.txt) and [query/test_datalog.txt](query/test_datalog.txt). They are read by `tests.scala` in [datalog/src/main/scala/edu/ucla/cs/wis/bigdatalog/spark/test](datalog/src/main/scala/edu/ucla/cs/wis/bigdatalog/spark/test).
+Tests profiles are located in [query/test_datalog.txt](query/test_datalog.txt) and [query/test_rasql.txt](query/test_rasql.txt). They are read by `tests.scala` in [datalog/src/main/scala/edu/ucla/cs/wis/bigdatalog/spark/test](datalog/src/main/scala/edu/ucla/cs/wis/bigdatalog/spark/test).
 
-## RaSQL Configuration
+## RaDlog Configuration
 
 Property Name | Default | Meaning
 ------------- | -------------| -------------
-spark.sql.sessionState|rasql|Choose between RaSQL and vanilla Spark mode. (rasql/spark)
+spark.sql.sessionState|radlog|Choose between RaDlog and vanilla Spark mode. (radlog/spark)
 spark.sql.codegen.wholeStage|false|Enable whole Stage code generation.
 spark.sql.shuffle.partitions|1|The number of partitions to use when shuffling data for joins or aggregations. **Set it to `cores-per-node * pinRDDHostLimit` to enable the maximum parallelism.**
-spark.locality.wait|0s|How long to wait to launch a data-local task. Note in RaSQL's pinRDD mode, it should be set to 0 as we have Partition-Aware Scheduling.
+spark.locality.wait|0s|How long to wait to launch a data-local task. Note in RaDlog's pinRDD mode, it should be set to 0 as we have Partition-Aware Scheduling.
 spark.datalog.pinRDDHostLimit|0|**Any value greater than 0 will enable the pinRDD mode in distributed deployment.** In pinRDD mode, each RDD split will be pinned to a specific worker node during the recursive evaluation. This number determines how many workers will be used in pinRDD mode. TODO: remove the hard-coded Hosts file!!!
 spark.datalog.aggrIterType|tungsten|The aggregate iterator type.
 spark.datalog.packedBroadcast|false|Enable the packed Broadcast mode.
