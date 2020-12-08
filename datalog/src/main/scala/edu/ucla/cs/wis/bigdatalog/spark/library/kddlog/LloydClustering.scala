@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.ucla.cs.wis.bigdatalog.spark.kddlog
+package edu.ucla.cs.wis.bigdatalog.spark.library.kddlog
 
 import edu.ucla.cs.wis.bigdatalog.spark.runner.KDDLogRunner
 

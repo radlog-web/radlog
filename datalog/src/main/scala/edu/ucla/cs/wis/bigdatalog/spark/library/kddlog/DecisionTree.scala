@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.ucla.cs.wis.bigdatalog.spark.kddlog
+package edu.ucla.cs.wis.bigdatalog.spark.library.kddlog
 
 import edu.ucla.cs.wis.bigdatalog.spark.runner.KDDLogRunner
 
@@ -68,11 +68,11 @@ object DecisionTree {
     dtree.initlizeConfig()
     dtree.setImpurity("Gini")
     val initPath = "testdata/dt/pattern.csv"
-    val isetPath = "testdata/dt/iset.csv"
+    val setPath = "testdata/dt/set.csv"
     val trainPath = "testdata/dt/train.csv"
     val decPath = "testdata/dt/dec.csv"
-    val expandPath = "testdata/dt/expand.csv"
-    dtree.trainClassifier(initPath, isetPath, trainPath, decPath, expandPath)
+    val colPath = "testdata/dt/col.csv"
+    dtree.trainClassifier(initPath, setPath, trainPath, decPath, colPath)
   }
 }
 
