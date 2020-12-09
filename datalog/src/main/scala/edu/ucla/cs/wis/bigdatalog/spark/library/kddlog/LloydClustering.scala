@@ -36,7 +36,7 @@ class LloydClustering {
 
   def setMaxIter(_maxIter: Int): Unit = {
     maxIter = _maxIter
-    configsMap.put("program", "Lloyd-withJ")
+    configsMap.put("program", "Lloyd")
   }
 
   def setNumClusters(_numClusters: Int): Unit = {
