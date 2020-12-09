@@ -17,7 +17,7 @@
 
 package edu.ucla.cs.wis.bigdatalog.spark.library.kddlog
 
-import edu.ucla.cs.wis.bigdatalog.spark.runner.KDDLogRunner
+import edu.ucla.cs.wis.bigdatalog.spark.runner.RaDlogRunner
 
 import scala.collection.mutable
 
@@ -54,7 +54,7 @@ class LloydClustering {
   def train(initPath: String, pointPath: String): Unit = {
     configsMap.put("init", initPath)
     configsMap.put("point", pointPath)
-    val results = new KDDLogRunner().run(configsMap.toMap[String, String])
+    val results = new RaDlogRunner().run(configsMap.toMap[String, String])
     println(results.size)
   }
 }

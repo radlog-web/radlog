@@ -15,64 +15,51 @@
  * limitations under the License.
  */
 
-package edu.ucla.cs.wis.bigdatalog.spark.library.kddlog
+package edu.ucla.cs.wis.bigdatalog.spark.library.graph
 
 import edu.ucla.cs.wis.bigdatalog.spark.runner.RaDlogRunner
 
 import scala.collection.mutable
 
-class DecisionTree {
-  var treeDepth = 5
+class CountPath {
+  var startVertex = 1
   val configsMap = new mutable.HashMap[String, String]()
-  var impurity = "Gini"
+
   def initlizeConfig(): Unit = {
     configsMap.put("master", "local[*]")
-    configsMap.put("aggrType", "new")
     configsMap.put("partitions", "16")
-    configsMap.put("program", "decision-tree")
+    configsMap.put("program", "count_paths")
     configsMap.put("codegen", "true")
     configsMap.put("fixpointTask", "false")
+    configsMap.put("startvertex", startVertex.toString)
+  }
+
+  def setStartVertex(_sv: Int): Unit = {
+    startVertex = _sv
+    configsMap.put("startvertex", startVertex.toString)
   }
 
   def setMaster(_master: String): Unit = {
     configsMap.put("master", _master)
   }
 
-  def setTreeDepth(_treeDepth: Int): Unit = {
-    treeDepth = _treeDepth
-    configsMap.put("TD", treeDepth.toString)
-  }
-  def setImpurity(_impurity: String): Unit = {
-    impurity = _impurity
-    configsMap.put("impurity", impurity)
-  }
-
   def setNumPartitions(num_part: Int): Unit = {
     configsMap.put("partitions", num_part.toString)
   }
 
-  def trainClassifier(initPath: String, isetPath: String, trainPath: String, decPath: String, expandPath: String): Unit = {
-    configsMap.put("init", initPath)
-    configsMap.put("iset", isetPath)
-    configsMap.put("train", trainPath)
-    configsMap.put("dec", decPath)
-    configsMap.put("expand", expandPath)
+  def run(rcPath: String): Unit = {
+    configsMap.put("rc", rcPath)
     val results = new RaDlogRunner().run(configsMap.toMap[String, String])
     println(results.size)
   }
 }
 
-object DecisionTree {
+object CountPath {
   def main(args: Array[String]): Unit = {
-    val dtree = new DecisionTree()
-    dtree.initlizeConfig()
-    dtree.setImpurity("Gini")
-    val initPath = "testdata/dt/pattern.csv"
-    val setPath = "testdata/dt/set.csv"
-    val trainPath = "testdata/dt/train.csv"
-    val decPath = "testdata/dt/dec.csv"
-    val colPath = "testdata/dt/col.csv"
-    dtree.trainClassifier(initPath, setPath, trainPath, decPath, colPath)
+    val lc = new CountPath()
+    lc.initlizeConfig()
+    val rcPath = "testdata/rc1.csv"
+    lc.run(rcPath)
   }
 }
 

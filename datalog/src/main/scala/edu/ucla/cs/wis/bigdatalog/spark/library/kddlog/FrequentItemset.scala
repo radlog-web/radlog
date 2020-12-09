@@ -17,7 +17,7 @@
 
 package edu.ucla.cs.wis.bigdatalog.spark.library.kddlog
 
-import edu.ucla.cs.wis.bigdatalog.spark.runner.KDDLogRunner
+import edu.ucla.cs.wis.bigdatalog.spark.runner.RaDlogRunner
 
 import scala.collection.mutable
 
@@ -49,7 +49,7 @@ class FrequentItemset {
 
   def run(mbsk: String): Unit = {
     configsMap.put("mbsk", mbsk)
-    val results = new KDDLogRunner().run(configsMap.toMap[String, String])
+    val results = new RaDlogRunner().run(configsMap.toMap[String, String])
     println(results.size)
   }
 }

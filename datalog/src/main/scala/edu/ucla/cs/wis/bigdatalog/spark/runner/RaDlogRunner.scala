@@ -21,7 +21,7 @@ import edu.ucla.cs.wis.bigdatalog.spark.BigDatalogSessionState
 
 import org.apache.spark.sql.Row
 
-class KDDLogRunner {
+class RaDlogRunner {
   private val dir = "query/datalog/"
   private val ext = ".txt"
 
